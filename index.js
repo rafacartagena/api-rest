@@ -1,8 +1,15 @@
-var http= require('http');
+'use strict'
 
-http.createServer((request, response)=>{
-    response.writeHead(200,{'Content-Type': 'text/plain'});
-    response.end('Hola a todas y a todos!\n');
-}).listen(8080);
+const port = process.env.PORT || 3000;
 
-console.log('Servidor ejecutándose en puerto 8080...');
+const express = require('express');
+const app = express();
+
+app.get('/hola/:unNombre', (request, response) => {
+    // response.send(`Hola a ${request.params.unNombre} desde Express`);
+    response.status(200).send({mensaje:`Hola ${request.params.unNombre} desde API con JSON`});
+});
+
+app.listen(port, () =>{
+    console.log(`API REST ejecutándose en http://localhost:${port}/hola/:tuNombre`);
+});

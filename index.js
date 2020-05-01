@@ -73,7 +73,7 @@ app.put('/api/:coleccion/:id', (res, req, next) => {
     var elementoID = req.params.id;
     var elementoNuevo = req.body;
 
-    req.collection.update({_id: id(elementoID)}, {&set: elementoNuevo}, {safe: true, multi: false}, (err, elementoModif) => {
+    req.collection.update({_id: id(elementoID)}, {$set: elementoNuevo}, {safe: true, multi: false}, (err, elementoModif) => {
         if (err) return next(err);
         res.json(elementoModif);
     });

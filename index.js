@@ -88,5 +88,5 @@ app.delete('/api/:coleccion/:id', (req, res, next) => {
 
 //Iniciamos el servicio CRUD
 app.listen(port, () =>{
-    console.log(`API REST ejecutándose en http://localhost:${port}/api/:coleccion:id`);
+    console.log(`API REST ejecutándose en http://localhost:${port}/api/:coleccion/:id`);
 });

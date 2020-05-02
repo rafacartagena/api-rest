@@ -24,7 +24,7 @@ app.use(express.json());
 //Añadimos un trigger previo a las rutas para dar soporte a múltiples colecciones
 app.param("coleccion", (req, res, next, coleccion) => {
     console.log('param /api/:coleccion'); 
-    console.log(`colección: ${colección}`); 
+    console.log(`colección: ${coleccion}`); 
 
     req.collection = db.collection(coleccion);
     return next();

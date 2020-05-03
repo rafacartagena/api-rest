@@ -20,6 +20,7 @@ const app = express();
 
 //Middleware
 
+//## CORS ##
 var allowCrossTokenHeader = (req, res, next) => {
     res.header("Access-Control-Allow-Headers", "*");
     return next();
@@ -29,6 +30,8 @@ var allowCrossTokenOrigin = (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     return next();
 };
+
+//##########
 
 var auth = (req, res, next) => {
     if(req.headers.token === "password1234") {

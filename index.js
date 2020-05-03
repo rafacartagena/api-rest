@@ -9,6 +9,8 @@ const express = require('express');
 const mongojs = require('mongojs');
 const logger = require('morgan');
 
+const cors = require('cors');
+
 //Conectamos con la BD
 var db = mongojs("API");
 var id = mongojs.ObjectID; //método para convertir un id textual en un objetio mongo
@@ -17,9 +19,33 @@ var id = mongojs.ObjectID; //método para convertir un id textual en un objetio 
 const app = express(); 
 
 //Middleware
+
+var allowCrossTokenHeader = (req, res, next) => {
+    res.header("Access-Control-Allow-Headers", "*");
+    return next();
+};
+
+var allowCrossTokenOrigin = (req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    return next();
+};
+
+var auth = (req, res, next) => {
+    if(req.headers.token === "password1234") {
+        return next();
+    } else {
+        return next(new Error("No autorizado"));
+    };
+};
+
+
 app.use(logger('dev')); //tiny, short, dev, common, combined
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
+
+app.use(cors());
+app.use(allowCrossTokenHeader);
+app.use(allowCrossTokenOrigin);
 
 //Añadimos un trigger previo a las rutas para dar soporte a múltiples colecciones
 app.param("coleccion", (req, res, next, coleccion) => {
@@ -58,7 +84,7 @@ app.get('/api/:coleccion/:id', (req, res, next) => {
     });
 });
 
-app.post('/api/:coleccion', (req, res, next) => {
+app.post('/api/:coleccion', auth, (req, res, next) => {
     const elemento = req.body;
 
     console.log(elemento);
@@ -69,7 +95,7 @@ app.post('/api/:coleccion', (req, res, next) => {
     });
 });
 
-app.put('/api/:coleccion/:id', (res, req, next) => {
+app.put('/api/:coleccion/:id', auth, (req, res, next) => {
     var elementoID = req.params.id;
     var elementoNuevo = req.body;
 
@@ -79,7 +105,7 @@ app.put('/api/:coleccion/:id', (res, req, next) => {
     });
 });
 
-app.delete('/api/:coleccion/:id', (req, res, next) => {
+app.delete('/api/:coleccion/:id', auth, (req, res, next) => {
     req.collection.remove({_id: id(req.params.id)}, (err, result) => {
         if (err) return next(err);
         res.json(result);
